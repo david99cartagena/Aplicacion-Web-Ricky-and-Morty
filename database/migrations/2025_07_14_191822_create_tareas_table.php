@@ -20,7 +20,7 @@ class CreateTareasTable extends Migration
             $table->text('descripcion')->nullable();
             $table->date('fecha_vencimiento');
             $table->enum('estado', ['Pendiente', 'En progreso', 'Completada'])->default('Pendiente');
-            $table->integer('rick_morty_personaje_id')->nullable(); // solo el ID, sin consumir la API
+            $table->integer('rick_morty_personaje_id')->nullable();
             $table->timestamps();
         });
     }

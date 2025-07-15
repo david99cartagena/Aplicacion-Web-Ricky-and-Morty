@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TareaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,8 +13,38 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Aquí se registran las rutas de la API.
+| Se agrupan con middlewares para proteger endpoints según roles.
+|
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// ✅ Rutas públicas (registro y login)
+Route::post('/register', [AuthController::class, 'register'])->name('api.register');
+Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+
+// ✅ Rutas protegidas con token JWT (middleware personalizado: isUserAuth)
+Route::middleware(['isUserAuth'])->group(function () {
+
+    // 🔐 Ruta para obtener el usuario autenticado
+    Route::get('/me', [AuthController::class, 'me'])->name('api.me');
+
+    // ✅ Rutas solo para ADMIN
+    Route::middleware(['isAdmin'])->group(function () {
+
+        // CRUD tareas
+        Route::apiResource('/tareas', TareaController::class)->names([
+            'index'   => 'api.tareas.index',
+            'store'   => 'api.tareas.store',
+            'update'  => 'api.tareas.update',
+            'destroy' => 'api.tareas.destroy',
+            'show'    => 'api.tareas.show',
+        ]);
+
+        // Asociar personaje a tarea
+        Route::put('/tareas/{id}/personaje', [TareaController::class, 'asociarPersonaje'])->name('api.tareas.asociarPersonaje');
+    });
 });
