@@ -1,61 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# 📘 Proyecto API Laravel 8 + JWT + SQL Server
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Este proyecto es una API RESTful construida con **Laravel 8.83**, **PHP 8.1**, y autenticación mediante **JWT (tymon/jwt-auth)**. Utiliza **SQL Server 2019** como base de datos. El frontend se ha realizado con **HTML**, **JavaScript** y **Bootstrap**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tecnologías utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Backend
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   **PHP** 8.1
+-   **Laravel** 8.83
+-   **JWT Auth** (`tymon/jwt-auth`)
+-   **SQL Server 2019**
+-   **L5-Swagger** para documentación de API
 
-## Learning Laravel
+### Frontend
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **HTML5**
+-   **Bootstrap**
+-   **JavaScript**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠️ Instrucciones de instalación
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 1. Clona el repositorio
 
-### Premium Partners
+```bash
+git clone https://github.com/usuario/mi-proyecto-api.git
+cd mi-proyecto-api
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+### 2. Copia el archivo de entorno
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Instala las dependencias
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Genera la clave de aplicación
 
-## Security Vulnerabilities
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Configura tu conexión a SQL Server
 
-## License
+Edita el archivo `.env` con los siguientes valores:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+DB_CONNECTION=sqlsrv
+DB_HOST=DESKTOP-Prueba
+DB_PORT=1433
+DB_DATABASE=laravel_db1
+DB_USERNAME=sa
+DB_PASSWORD=tu_password
+```
+
+### 6. Ejecuta las migraciones
+
+```bash
+php artisan migrate
+```
+
+### 7. Sirve la aplicación
+
+```bash
+php artisan serve
+```
+
+Accede en: [http://localhost:8000](http://localhost:8000) o [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
+## 🔐 Usuario demo para login
+
+Puedes usar este usuario para probar la autenticación:
+
+```
+Email: david@example.com
+Password: 123456
+```
+
+---
+
+## 📄 Documentación Swagger
+
+Una vez corras el servidor, accede a la documentación Swagger aquí:
+
+> [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+
+---
+
+## 📂 Estructura de carpetas destacada
+
+-   `/app/Http/Controllers/AuthController.php` - Controlador de autenticación
+-   `/routes/api.php` - Rutas de la API protegidas por JWT
+-   `/resources/views/` - Vistas HTML para login y registro
+-   `/public/js/` - Scripts de login y registro (frontend)
+
+---
+
+## 📦 Dependencias principales
+
+-   `laravel/framework: ^8.83`
+-   `tymon/jwt-auth: ^1.0@dev`
+-   `darkaonline/l5-swagger: ^8.6`
+
+---
+
+## 🧪 Frontend disponible
+
+Puedes usar los archivos:
+
+-   `index.html` → formulario de login
+-   `register.html` → formulario de registro
+
+Estos se comunican con los endpoints `/api/login` y `/api/register` usando fetch API y muestran alertas con los resultados.
+
+---
+
+## 🗒️ Notas adicionales
+
+-   Usa `php artisan view:clear` y `php artisan optimize` si hay errores de caché de vista.
+-   Asegúrate de que tu SQL Server permite autenticación SQL (modo mixto).
+-   Ejecuta `php artisan jwt:secret` si usas JWT por primera vez.
+
+---
+
+## 📷 Imagenes de la Aplicacion
+
+![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_1.png)
