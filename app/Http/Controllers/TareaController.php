@@ -325,7 +325,6 @@ class TareaController extends Controller
         }
     }
 
-
     /**
      * @OA\Delete(
      *     path="/api/tareas/{id}",
