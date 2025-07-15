@@ -135,4 +135,38 @@ Estos se comunican con los endpoints `/api/login` y `/api/register` usando fetch
 
 ## 📷 Imagenes de la Aplicacion
 
-![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_1.png)
+**Usuario**
+
+-   Inicio y registro de usuario
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_1.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_2.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_3.png)
+
+-   Opciones de role Administardor
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_4.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_5.png)
+
+**Modulo de Tareas**
+
+-   Crear y editar tareas
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_6.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_7.png)
+
+-   Uso de Api Rick and Morty
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_8.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_9.png)
+
+**Rol de User**
+
+-   Opciones de rol Usuario
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_10.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_11.png)
