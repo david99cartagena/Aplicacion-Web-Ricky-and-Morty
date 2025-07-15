@@ -37,11 +37,11 @@ Route::middleware(['isUserAuth'])->group(function () {
 
         // CRUD tareas
         Route::apiResource('/tareas', TareaController::class)->names([
-            'index'   => 'api.tareas.index',
-            'store'   => 'api.tareas.store',
-            'update'  => 'api.tareas.update',
-            'destroy' => 'api.tareas.destroy',
-            'show'    => 'api.tareas.show',
+            'index' => 'api.admin.tareas.index',
+            'store' => 'api.admin.tareas.store',
+            'update' => 'api.admin.tareas.update',
+            'destroy' => 'api.admin.tareas.destroy',
+            'show' => 'api.admin.tareas.show',
         ]);
 
         // Asociar personaje a tarea
