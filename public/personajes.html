@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Personajes Rick and Morty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark px-4">
+        <a class="navbar-brand text-white" href="dashboard_admin.html">← Volver</a>
+        <div class="ms-auto text-white">
+            Bienvenido <strong id="user-name"></strong> (<span id="user-role"></span>)
+            <button onclick="logout()" class="btn btn-danger btn-sm ms-3">
+                Cerrar sesión
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h3>Personajes Rick and Morty</h3>
+        <div class="row" id="personajes-container"></div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/index.html";
+        }
+
+        fetch("http://localhost:8000/api/me", {
+            headers: { Authorization: "Bearer " + token },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status === 200) {
+                    const user = data.user;
+                    document.getElementById("user-name").textContent =
+                        user.name;
+                    document.getElementById("user-role").textContent =
+                        user.role;
+
+                    user.role === "admin"
+                        ? null
+                        : (alert("Solo el admin puede ver las tareas."),
+                            (window.location.href = "dashboard_user.html"));
+                }
+            });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const randomPage = Math.floor(Math.random() * 42) + 1; // Hay 42 páginas (hasta julio 2025)
+
+            fetch(
+                `https://rickandmortyapi.com/api/character?page=${randomPage}`
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    const contenedor = document.getElementById(
+                        "personajes-container"
+                    );
+                    data.results.forEach((p) => {
+                        const card = document.createElement("div");
+                        card.classList.add("col-md-3");
+                        card.innerHTML = `
+          <div class="card mb-4">
+            <img src="${p.image}" class="card-img-top" alt="${p.name}">
+            <div class="card-body">
+              <h5 class="card-title">${p.name}</h5>
+              <p class="card-text">Especie: ${p.species}<br>Estado: ${p.status}</p>
+              <button class="btn btn-primary btn-sm" onclick="asociarPersonaje(${p.id}, '${p.name}')">Asociar</button>
+            </div>
+          </div>
+        `;
+                        contenedor.appendChild(card);
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("❌ Error al cargar personajes");
+                });
+        });
+
+        function asociarPersonaje(personajeId, personajeNombre) {
+            const tareaId = prompt("Ingresa el ID de la tarea a asociar:");
+            const token = localStorage.getItem("token");
+
+            if (!tareaId || !token) return;
+
+            fetch(`http://localhost:8000/api/tareas/${tareaId}/personaje`, {
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    rick_morty_personaje_id: personajeId,
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === 200) {
+                        alert(
+                            `✅ Personaje "${personajeNombre}" asociado a la tarea ${tareaId}`
+                        );
+                    } else {
+                        alert("❌ Error al asociar personaje");
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("❌ Error de red");
+                });
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/index.html";
+        }
+    </script>
+</body>
+
+</html>

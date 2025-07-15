@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Crear/Editar Tarea</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand text-white" href="tareas.html">← Volver a Tareas</a>
+    <div class="ms-auto text-white">
+      <button onclick="logout()" class="btn btn-danger btn-sm">
+        Cerrar sesión
+      </button>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h3 id="form-title">📝 Crear Tarea</h3>
+
+    <form id="formTarea" class="mt-4">
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título</label>
+        <input type="text" class="form-control" id="titulo" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea id="descripcion" class="form-control"></textarea>
+      </div>
+
+      <!-- <div class="mb-3" id="grupo-fecha">
+        <label for="fecha_vencimiento" class="form-label">Fecha Vencimiento</label>
+        <input type="date" class="form-control" id="fecha_vencimiento" required/>
+      </div> -->
+
+      <div class="mb-3" id="grupo-fecha">
+        <label for="fecha_vencimiento" class="form-label">Fecha Vencimiento</label>
+        <input type="date" class="form-control" id="fecha_vencimiento" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="estado" class="form-label">Estado</label>
+        <select id="estado" class="form-select">
+          <option value="Pendiente">Pendiente</option>
+          <option value="En progreso">En progreso</option>
+          <option value="Completada">Completada</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="btn-submit">
+        Guardar
+      </button>
+    </form>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+    const form = document.getElementById("formTarea");
+    const queryParams = new URLSearchParams(window.location.search);
+    const tareaId = queryParams.get("id");
+
+    if (!token) {
+      alert("Debes iniciar sesión.");
+      window.location.href = "/index.html";
+    }
+
+    if (tareaId) {
+      document.getElementById("form-title").textContent =
+        "✏️ Editar Tarea";
+
+      // Cargar datos de la tarea
+      fetch(`http://localhost:8000/api/tareas/${tareaId}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === 200) {
+            const t = data.tarea;
+            document.getElementById("titulo").value = t.titulo;
+            document.getElementById("descripcion").value =
+              t.descripcion || "";
+            document.getElementById("estado").value = t.estado;
+            document.getElementById("fecha_vencimiento").value =
+              t.fecha_vencimiento;
+          } else {
+            alert("❌ No se encontró la tarea");
+            window.location.href = "tareas.html";
+          }
+        });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const titulo = document.getElementById("titulo").value;
+      const descripcion =
+        document.getElementById("descripcion").value;
+      const estado = document.getElementById("estado").value;
+      const fecha_vencimiento =
+        document.getElementById("fecha_vencimiento").value;
+
+      const url = tareaId
+        ? `http://localhost:8000/api/tareas/${tareaId}`
+        : "http://localhost:8000/api/tareas";
+
+      const method = tareaId ? "PUT" : "POST";
+
+      const bodyData = {
+        titulo,
+        descripcion,
+        estado,
+        fecha_vencimiento,
+      };
+
+      // Solo incluir fecha si es creación
+      if (!tareaId) {
+        bodyData.fecha_vencimiento = fecha_vencimiento;
+      }
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bodyData),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert(
+            tareaId ? "✅ Tarea actualizada" : "✅ Tarea creada"
+          );
+          window.location.href = "tareas.html";
+        } else {
+          alert(data.msg || "❌ Error en la operación");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("❌ Error de red");
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "/index.html";
+    }
+  </script>
+</body>
+
+</html>

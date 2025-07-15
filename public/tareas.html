@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Listado de Tareas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark px-4">
+        <a class="navbar-brand text-white" href="dashboard_admin.html">← Volver</a>
+        <div class="ms-auto text-white">
+            Bienvenido <strong id="user-name"></strong> (<span id="user-role"></span>)
+            <button onclick="logout()" class="btn btn-danger btn-sm ms-3">
+                Cerrar sesión
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h3>📋 Lista de Tareas</h3>
+        <button class="btn btn-success my-3" onclick="location.href='crear_tarea.html'">
+            ➕ Nueva Tarea
+        </button>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Personaje ID</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tareas-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/index.html";
+        }
+
+        fetch("http://localhost:8000/api/me", {
+            headers: { Authorization: "Bearer " + token },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status === 200) {
+                    const user = data.user;
+                    document.getElementById("user-name").textContent =
+                        user.name;
+                    document.getElementById("user-role").textContent =
+                        user.role;
+
+                    if (user.role === "admin") {
+                        cargarTareas();
+                    } else {
+                        alert("Solo el admin puede ver las tareas.");
+                        window.location.href = "dashboard_user.html";
+                    }
+                }
+            });
+
+        function cargarTareas() {
+            fetch("http://localhost:8000/api/tareas", {
+                headers: { Authorization: "Bearer " + token },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    const tbody = document.getElementById("tareas-body");
+                    tbody.innerHTML = "";
+
+                    data.tareas.forEach(async (t) => {
+                        let personajeHTML = "Sin Asignar";
+
+                        if (t.rick_morty_personaje_id) {
+                            try {
+                                const personajeRes = await fetch(
+                                    `https://rickandmortyapi.com/api/character/${t.rick_morty_personaje_id}`
+                                );
+                                const personaje = await personajeRes.json();
+
+                                personajeHTML = `
+                    <div class="d-flex align-items-center gap-2">
+                        <small>${personaje.id}</small>
+                        <img src="${personaje.image}" width="50" height="50" class="rounded-circle" title="${personaje.name}" alt="${personaje.name}">
+                        <div>
+                        <strong>${personaje.name}</strong><br>
+                        <small>${personaje.species} - ${personaje.status}</small>
+                        </div>
+                    </div>
+                    `;
+                            } catch (error) {
+                                personajeHTML = "Error al cargar personaje";
+                            }
+                        }
+
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                <td>${t.id}</td>
+                <td>${t.titulo}</td>
+                <td>${t.descripcion || "-"}</td>
+                <td>${t.estado}</td>
+                <td>${t.fecha_vencimiento}</td>
+                <!--td>${t.rick_morty_personaje_id || "Sin ID"}</td-->
+                <td>${personajeHTML}</td>
+                <td>
+                    <a href="crear_tarea.html?id=${t.id
+                            }" class="btn btn-sm btn-outline-primary" title="Editar">✏️</a>
+                    <button class="btn btn-sm btn-outline-danger ms-1" onclick="eliminarTarea(${t.id
+                            })" title="Eliminar">🗑️</button>
+                </td>
+                `;
+                        tbody.appendChild(row);
+                    });
+                });
+        }
+
+        function eliminarTarea(id) {
+            if (!confirm("¿Estás seguro de eliminar esta tarea?")) return;
+
+            fetch(`http://localhost:8000/api/tareas/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === 200) {
+                        alert("✅ Tarea eliminada correctamente");
+                        cargarTareas();
+                    } else {
+                        alert(data.msg || "❌ No se pudo eliminar");
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("❌ Error de red al eliminar");
+                });
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/index.html";
+        }
+    </script>
+</body>
+
+</html>

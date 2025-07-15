@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Usuario</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 400px">
+      <div class="card-body">
+        <h4 class="card-title text-center mb-4">📝 Registro</h4>
+        <form id="registerForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name" required />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="email" required />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password" required minlength="6" />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            Registrarme
+          </button>
+        </form>
+        <p class="mt-3 text-center">
+          ¿Ya tienes cuenta?
+          <a href="index.html">Inicia sesión</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const res = await fetch(
+            "http://localhost:8000/api/register",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, email, password }),
+            }
+          );
+
+          const data = await res.json();
+
+          if (res.ok) {
+            alert("✅ Usuario registrado. Inicia sesión.");
+            window.location.href = "index.html"; // o login.html
+          } else {
+            alert(data.msg || "❌ Error al registrar usuario");
+          }
+        } catch (error) {
+          alert("❌ Error de red o servidor");
+          console.error(error);
+        }
+      });
+  </script>
+</body>
+
+</html>

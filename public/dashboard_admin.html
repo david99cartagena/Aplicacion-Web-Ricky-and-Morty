@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Admin - Rick & Morty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand" href="#">Admin Panel</a>
+        <div class="ms-auto">
+            <span class="text-white me-3" id="user-info">
+                Bienvenido <strong id="user-name"></strong> (<span id="user-role"></span>)
+            </span>
+            <button onclick="logout()" class="btn btn-danger">
+                Cerrar sesión
+            </button>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <h2 class="mb-4">Panel de Administración</h2>
+
+        <div id="admin-tools" style="display: none">
+            <div class="mb-4">
+                <h4>Gestión de Tareas</h4>
+                <a href="tareas.html" class="btn btn-primary">Ver Tareas</a>
+                <a href="personajes.html" class="btn btn-secondary">Personajes</a>
+            </div>
+        </div>
+
+        <div id="user-tools" style="display: none">
+            <div class="alert alert-warning">
+                No tienes permisos de administrador.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                window.location.href = "/index.html";
+                return;
+            }
+
+            fetch("http://localhost:8000/api/me", {
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.status === 200) {
+                        const user = data.user;
+
+                        // Mostrar nombre y rol
+                        document.getElementById("user-name").textContent =
+                            user.name;
+                        document.getElementById("user-role").textContent =
+                            user.role;
+
+                        if (user.role === "admin") {
+                            document.getElementById(
+                                "admin-tools"
+                            ).style.display = "block";
+                        } else {
+                            document.getElementById(
+                                "user-tools"
+                            ).style.display = "block";
+                        }
+                    } else {
+                        alert("No autorizado, vuelve a iniciar sesión.");
+                        window.location.href = "/index.html";
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Error al obtener los datos del usuario.");
+                    window.location.href = "/index.html";
+                });
+        });
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
+            window.location.href = "/index.html";
+        }
+    </script>
+</body>
+
+</html>

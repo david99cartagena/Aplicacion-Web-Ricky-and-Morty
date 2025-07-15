@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Usuario - Rick & Morty</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand" href="#">Usuario</a>
+    <div class="ms-auto">
+      <span class="text-white me-3" id="user-info">
+        Bienvenido <strong id="user-name"></strong> (<span id="user-role"></span>)
+      </span>
+      <button onclick="logout()" class="btn btn-danger">
+        Cerrar sesión
+      </button>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h3>👋 ¡Hola usuario!</h3>
+    <div id="user-tools" class="mt-4">
+      <p>Accede a tus funciones como usuario aquí.</p>
+      <!-- Puedes agregar funciones específicas del usuario aquí -->
+      <a href="tareas_usuario.html" class="btn btn-primary">📋 Ver Mis Tareas</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "/index.html";
+        return;
+      }
+
+      fetch("http://localhost:8000/api/me", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === 200) {
+            const user = data.user;
+
+            // Mostrar nombre y rol
+            document.getElementById("user-name").textContent =
+              user.name;
+            document.getElementById("user-role").textContent =
+              user.role;
+
+            if (user.role !== "user") {
+              alert("Acceso restringido para usuarios.");
+              window.location.href = "dashboard_admin.html";
+            }
+          } else {
+            alert("No autorizado, vuelve a iniciar sesión.");
+            window.location.href = "/index.html";
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Error al obtener los datos del usuario.");
+          window.location.href = "/index.html";
+        });
+    });
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      window.location.href = "/index.html";
+    }
+  </script>
+</body>
+
+</html>
