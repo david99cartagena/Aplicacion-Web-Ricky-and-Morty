@@ -154,6 +154,7 @@ Estos se comunican con los endpoints `/api/login` y `/api/register` usando fetch
 **Modulo de Tareas**
 
 -   Crear y editar tareas
+
     ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_6.png)
 
     ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_7.png)
@@ -167,6 +168,7 @@ Estos se comunican con los endpoints `/api/login` y `/api/register` usando fetch
 **Rol de User**
 
 -   Opciones de rol Usuario
+
     ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_10.png)
 
     ![](https://raw.githubusercontent.com/david99cartagena/Aplicacion-Web-Ricky-and-Morty/refs/heads/master/media/Screenshot_11.png)

@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\Auth;
 */
 
 // ✅ Redirección raíz al login (solo una vez)
-Route::get('/', fn () => redirect('/login'));
+Route::get('/', function () {
+    return redirect('/index.html');
+});
 
 // ✅ Login
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginWeb']);
 
 // ✅ Registro
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
 // ✅ Dashboard para usuario autenticado
